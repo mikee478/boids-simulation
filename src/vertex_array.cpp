@@ -23,11 +23,10 @@ void VertexArray::Unbind() const
     GLCALL(glBindVertexArray(0));
 }
 
-void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout, const IndexBuffer& ib)
+void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout)
 {
     Bind();
     vb.Bind();
-    ib.Bind();
 
     const auto &elements = layout.GetElements();
     unsigned int offset = 0;

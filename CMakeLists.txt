@@ -15,22 +15,29 @@ find_package(GLEW REQUIRED)
 target_link_libraries(${PROJECT_NAME} GLEW::GLEW)
 
 # Add include directories to a target
-target_include_directories(${PROJECT_NAME} 
-PRIVATE 
-    ${PROJECT_SOURCE_DIR}/src
-    /opt/homebrew/include # glm
-)
+# target_include_directories(${PROJECT_NAME} 
+# PRIVATE 
+#     /opt/homebrew/include # glm
+# )
 
 # Add sources to a target
 target_sources(${PROJECT_NAME} 
 PRIVATE 
     src/main.cpp
     src/renderer.cpp
+    src/renderer.h
     src/vertex_buffer.cpp
+    src/vertex_buffer.h
     src/shader.cpp
+    src/shader.h
     src/index_buffer.cpp
+    src/index_buffer.h
     src/vertex_array.cpp
-    src/camera.cpp
+    src/vertex_array.h
+    src/boid.cpp
+    src/boid.h
+    src/flock.cpp
+    src/flock.h
 
     src/imgui/imgui_demo.cpp
     src/imgui/imgui_draw.cpp

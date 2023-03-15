@@ -30,8 +30,22 @@ namespace Input
         else if(action == GLFW_RELEASE) key_pressed[key] = false;
     }
 
+    namespace
+    {
+        double x_pos_;
+        double y_pos_;
+    }
+
+    void GetMousePosition(int &x_pos, int &y_pos)
+    {
+        x_pos = x_pos_;
+        y_pos = y_pos_;
+    }
+
     void MousePosCallback(GLFWwindow* window, double x_pos, double y_pos)
     {
+        x_pos_ = x_pos;
+        y_pos_ = y_pos;
     }
 
     void GetMouseDelta(GLFWwindow* window, int &delta_x, int &delta_y)
@@ -87,7 +101,7 @@ namespace Input
     }
 
     void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
-    {
+    {        
         if(action == GLFW_PRESS) mouse_button_pressed[button] = true;
         else if(action == GLFW_RELEASE) mouse_button_pressed[button] = false;
     }
