@@ -9,11 +9,8 @@ out VS_OUT
     float heading;
 } vs_out;
 
-uniform mat4 proj_mat;
-
 void main()
 {
     vs_out.position = position;
     vs_out.heading = heading;
-    // gl_Position = proj_mat * vec4(position, 0.0, 1.0);
 }

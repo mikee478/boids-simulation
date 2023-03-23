@@ -38,6 +38,9 @@ PRIVATE
     src/boid.h
     src/flock.cpp
     src/flock.h
+    src/obstacle.h
+    src/point_obstacle.h    
+    src/line_obstacle.h    
 
     src/imgui/imgui_demo.cpp
     src/imgui/imgui_draw.cpp

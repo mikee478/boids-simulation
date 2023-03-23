@@ -15,6 +15,9 @@
 #include "renderer.h"
 #include "input.h"
 #include "flock.h"
+#include "obstacle.h"
+#include "point_obstacle.h"
+#include "line_obstacle.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
@@ -22,6 +25,8 @@
 
 int main(void)
 {
+    srand(time(NULL));
+
     // Initialize the GLFW library
     if (!glfwInit())
         return -1;
@@ -72,23 +77,24 @@ int main(void)
     if(glewInit() != GLEW_OK)
         std::cout << "GLEW ERROR!" << std::endl;
 
+    glEnable(GL_BLEND);  
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
+
     Flock flock;
+    float cohesion_weight = flock.GetCohesionWeight();
+    float separation_weight = flock.GetSeparationWeight();
+    float alignment_weight = flock.GetAlignmentWeight();
 
-    // Create and use shader program
-    // *** Relative file paths are relative to current working directory ***
-    Shader shader(
-        "/Users/michael/Documents/projects/boids/res/shaders/vertex.shader", 
-        "/Users/michael/Documents/projects/boids/res/shaders/geometry.shader", 
-        "/Users/michael/Documents/projects/boids/res/shaders/fragment.shader");
-    shader.Bind();
+    auto mouse_obstacle = std::make_shared<PointObstacle>(0.0f, 0.0f, 50.0f);
+    auto bot_wall_obst = std::make_shared<LineObstacle>(0.0f, 0.0f, WINDOW_WIDTH, 0.0f, 50.0f);
+    auto top_wall_obst = std::make_shared<LineObstacle>(0.0f, WINDOW_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, 50.0f);
+    auto mid_wall_obst = std::make_shared<LineObstacle>(WINDOW_WIDTH/3.0, WINDOW_HEIGHT/2.0, WINDOW_WIDTH*2.0/3.0, WINDOW_HEIGHT/2.0, 50.0f);
 
-    glm::mat4 proj_mat = glm::ortho(
-        0.0f, static_cast<float>(WINDOW_WIDTH), 
-        0.0f, static_cast<float>(WINDOW_HEIGHT));
-
-    shader.SetUniformMatrix4f("proj_mat", proj_mat);
-
-    Renderer renderer;
+    std::vector<std::shared_ptr<Obstacle>> obstacles;
+    obstacles.push_back(mouse_obstacle);
+    obstacles.push_back(bot_wall_obst);
+    obstacles.push_back(top_wall_obst);
+    obstacles.push_back(mid_wall_obst);
 
     float prev_time = 0, cur_time, dt;
 
@@ -100,36 +106,43 @@ int main(void)
     {
         glfwPollEvents();
 
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        ImGui::Begin("Configuration");
+        
+        ImGui::SliderFloat("Cohesion", &cohesion_weight, 0.0f, 10.0f);
+        ImGui::SliderFloat("Separation", &separation_weight, 0.0f, 10.0f);
+        ImGui::SliderFloat("Alignment", &alignment_weight, 0.0f, 10.0f);
+        ImGui::Text("%lu Boids", flock.GetSize());
+        ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
+        
+        ImGui::End();
+
+        flock.SetCohesionWeight(cohesion_weight);
+        flock.SetSeparationWeight(separation_weight);
+        flock.SetAlignmentWeight(alignment_weight);
+
         cur_time = glfwGetTime();
         dt = cur_time - prev_time;
         prev_time = cur_time;
 
         if(Input::MouseButtonLeftPressed())
-        {
-            int x, y;
-            Input::GetMousePosition(x,y);
-            flock.AddBoid({x,-y+WINDOW_HEIGHT});
-        }
+            flock.AddBoid({Input::mouse_x, -Input::mouse_y + WINDOW_HEIGHT});
 
-        flock.Update(dt);
+        mouse_obstacle->SetCenter(Input::mouse_x, -Input::mouse_y + WINDOW_HEIGHT);
 
-        renderer.Clear();
+        flock.Update(obstacles, dt);
+
+        Clear();
+
+        for(const auto &obst : obstacles)
+            obst->Render();
         flock.Render();
 
-        { // imgui
-            ImGui_ImplOpenGL3_NewFrame();
-            ImGui_ImplGlfw_NewFrame();
-            ImGui::NewFrame();
-
-            ImGui::Begin("Debug Window");
-
-            ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
-            
-            ImGui::End();
-
-            ImGui::Render();
-            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        }
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         // Swap front and back buffers
         glfwSwapBuffers(window);

@@ -2,11 +2,13 @@
 
 #include <GLFW/glfw3.h>
 #include <array>
+#include "imgui/imgui.h"
 
 namespace Input
 {
     std::array<int, GLFW_KEY_LAST+1> key_pressed;
     std::array<int, GLFW_MOUSE_BUTTON_LAST+1> mouse_button_pressed;
+    double mouse_x = 0.0f, mouse_y = 0.0f;
 
     bool UpPressed() {return key_pressed[GLFW_KEY_UP];}
     bool DownPressed() {return key_pressed[GLFW_KEY_DOWN];}
@@ -30,22 +32,10 @@ namespace Input
         else if(action == GLFW_RELEASE) key_pressed[key] = false;
     }
 
-    namespace
-    {
-        double x_pos_;
-        double y_pos_;
-    }
-
-    void GetMousePosition(int &x_pos, int &y_pos)
-    {
-        x_pos = x_pos_;
-        y_pos = y_pos_;
-    }
-
     void MousePosCallback(GLFWwindow* window, double x_pos, double y_pos)
     {
-        x_pos_ = x_pos;
-        y_pos_ = y_pos;
+        mouse_x = x_pos;
+        mouse_y = y_pos;
     }
 
     void GetMouseDelta(GLFWwindow* window, int &delta_x, int &delta_y)
@@ -101,7 +91,10 @@ namespace Input
     }
 
     void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
-    {        
+    {
+        // ignore mouse button over imgui window 
+        if(ImGui::GetIO().WantCaptureMouse) 
+            return;
         if(action == GLFW_PRESS) mouse_button_pressed[button] = true;
         else if(action == GLFW_RELEASE) mouse_button_pressed[button] = false;
     }

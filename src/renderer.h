@@ -12,11 +12,4 @@
 
 void GLClearErrors();
 bool GLLogCall(const char* function, const char* file, int line);
-
-class Renderer
-{
-public:
-    Renderer();
-    void Clear() const;
-    void Draw(unsigned int mode, const VertexArray& va, const Shader& shader) const;
-};
+void Clear();
