@@ -3,6 +3,7 @@
 
 Flock::Flock(glm::vec3 color)
     : cohesion_weight_(2.0f), separation_weight_(3.0f), alignment_weight_(2.0f),
+    obst_avoid_weight_(15.0f),
     flock_renderer_(std::make_unique<FlockRenderer>(color))
 {
 }
@@ -16,7 +17,10 @@ void Flock::AddBoid(const glm::vec2 &position)
 void Flock::Update(const std::vector<std::shared_ptr<Obstacle>> &obstacles, float dt)
 {
     for(int i = 0;i<boids_.size(); i++)
-        boids_[i]->Update(dt, boids_, cohesion_weight_, separation_weight_, alignment_weight_, obstacles);
+        boids_[i]->Update(
+            dt, boids_,
+            cohesion_weight_, separation_weight_, alignment_weight_, obst_avoid_weight_,
+            obstacles);
 }
 
 void Flock::Render()

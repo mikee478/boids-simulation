@@ -56,9 +56,19 @@ public:
     const glm::vec2& GetCenter() const {return center_;}
     void SetCenter(float x, float y) {center_.x = x; center_.y = y;}
     void SetCenter(const glm::vec2 &center) {center_ = center;}
-    float Distance(glm::vec2 p) const override {return glm::length(center_ - p);}
-    glm::vec2 DistanceVector(glm::vec2 p) const override {return center_ - p;}
-    void Render() override {renderer_->Render(center_);}
+    float Distance(glm::vec2 p) const override
+    {
+        return glm::length(center_ - p);
+    }
+    glm::vec2 DistanceVector(glm::vec2 p) const override
+    {
+        return center_ - p;
+    }
+    void Render() override
+    {
+        if(enabled)
+            renderer_->Render(center_);
+    }
 
 private:
     glm::vec2 center_;

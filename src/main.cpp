@@ -84,6 +84,7 @@ int main(void)
     float cohesion_weight = flock.GetCohesionWeight();
     float separation_weight = flock.GetSeparationWeight();
     float alignment_weight = flock.GetAlignmentWeight();
+    float obst_avoid_weight = flock.GetObstacleAvoidanceWeight();
 
     auto mouse_obstacle = std::make_shared<PointObstacle>(0.0f, 0.0f, 50.0f);
     auto bot_wall_obst = std::make_shared<LineObstacle>(0.0f, 0.0f, WINDOW_WIDTH, 0.0f, 50.0f);
@@ -97,6 +98,8 @@ int main(void)
     obstacles.push_back(mid_wall_obst);
 
     float prev_time = 0, cur_time, dt;
+    bool paused = false;
+    double mouse_x, mouse_y;
 
     ImGui::CreateContext();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -112,9 +115,13 @@ int main(void)
 
         ImGui::Begin("Configuration");
         
-        ImGui::SliderFloat("Cohesion", &cohesion_weight, 0.0f, 10.0f);
-        ImGui::SliderFloat("Separation", &separation_weight, 0.0f, 10.0f);
-        ImGui::SliderFloat("Alignment", &alignment_weight, 0.0f, 10.0f);
+        ImGui::SliderFloat("Cohesion", &cohesion_weight, 0.0f, 20.0f);
+        ImGui::SliderFloat("Separation", &separation_weight, 0.0f, 20.0f);
+        ImGui::SliderFloat("Alignment", &alignment_weight, 0.0f, 20.0f);
+        ImGui::SliderFloat("Obstacle Avoidance", &obst_avoid_weight, 0.0f, 20.0f);
+        ImGui::Checkbox("Mouse Obstacle", &mouse_obstacle->enabled);
+        ImGui::Checkbox("Paused", &paused);
+        ImGui::Separator();
         ImGui::Text("%lu Boids", flock.GetSize());
         ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
         
@@ -123,17 +130,23 @@ int main(void)
         flock.SetCohesionWeight(cohesion_weight);
         flock.SetSeparationWeight(separation_weight);
         flock.SetAlignmentWeight(alignment_weight);
+        flock.SetObstacleAvoidanceWeight(obst_avoid_weight);
 
         cur_time = glfwGetTime();
         dt = cur_time - prev_time;
         prev_time = cur_time;
 
-        if(Input::MouseButtonLeftPressed())
-            flock.AddBoid({Input::mouse_x, -Input::mouse_y + WINDOW_HEIGHT});
+        if(!paused)
+        {
+            glfwGetCursorPos(window, &mouse_x, &mouse_y);
 
-        mouse_obstacle->SetCenter(Input::mouse_x, -Input::mouse_y + WINDOW_HEIGHT);
+            if(Input::MouseButtonLeftPressed())
+                flock.AddBoid({mouse_x, -mouse_y + WINDOW_HEIGHT});
 
-        flock.Update(obstacles, dt);
+            mouse_obstacle->SetCenter(mouse_x, -mouse_y + WINDOW_HEIGHT);
+
+            flock.Update(obstacles, dt);
+        }
 
         Clear();
 

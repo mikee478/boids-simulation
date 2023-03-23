@@ -15,6 +15,10 @@ public:
     virtual void Render() = 0;
     virtual ~Obstacle() {}
 protected:
-    Obstacle(float range) : range_(range) {}
+    Obstacle(float range) : range_(range), enabled(true) {}
+
+protected:
     float range_;
+public:
+    bool enabled;
 };

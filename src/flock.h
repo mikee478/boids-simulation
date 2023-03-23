@@ -20,9 +20,11 @@ public:
     float GetCohesionWeight() const {return cohesion_weight_;}
     float GetSeparationWeight() const {return separation_weight_;}
     float GetAlignmentWeight() const {return alignment_weight_;}
+    float GetObstacleAvoidanceWeight() const {return obst_avoid_weight_;}
     void SetCohesionWeight(float w) {cohesion_weight_ = w;}
     void SetSeparationWeight(float w) {separation_weight_ = w;}
     void SetAlignmentWeight(float w) {alignment_weight_ = w;}
+    float SetObstacleAvoidanceWeight(float w) {obst_avoid_weight_ = w;}
     void Render();
 
     static const size_t MAX_BOIDS = 600;
@@ -32,6 +34,7 @@ private:
     float cohesion_weight_;
     float separation_weight_;
     float alignment_weight_;
+    float obst_avoid_weight_;
     std::unique_ptr<FlockRenderer> flock_renderer_;
 };
 

@@ -82,7 +82,8 @@ public:
     }
     void Render() override
     {
-        renderer_->Render(a_, b_);
+        if(enabled)
+            renderer_->Render(a_, b_);
     }
 
 private:

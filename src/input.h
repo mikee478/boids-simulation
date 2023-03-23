@@ -8,7 +8,6 @@ namespace Input
 {
     std::array<int, GLFW_KEY_LAST+1> key_pressed;
     std::array<int, GLFW_MOUSE_BUTTON_LAST+1> mouse_button_pressed;
-    double mouse_x = 0.0f, mouse_y = 0.0f;
 
     bool UpPressed() {return key_pressed[GLFW_KEY_UP];}
     bool DownPressed() {return key_pressed[GLFW_KEY_DOWN];}
@@ -34,8 +33,6 @@ namespace Input
 
     void MousePosCallback(GLFWwindow* window, double x_pos, double y_pos)
     {
-        mouse_x = x_pos;
-        mouse_y = y_pos;
     }
 
     void GetMouseDelta(GLFWwindow* window, int &delta_x, int &delta_y)

@@ -11,6 +11,7 @@ Boid::Boid(glm::vec2 position) : position_(position)
 
 void Boid::Update(float dt, const std::vector<std::shared_ptr<Boid>> &boids, 
     float cohesion_weight, float separation_weight, float alignment_weight,
+    float obst_avoid_weight,
     const std::vector<std::shared_ptr<Obstacle>> &obstacles)
 {
     std::vector<std::shared_ptr<Boid>> neighbors;
@@ -30,9 +31,16 @@ void Boid::Update(float dt, const std::vector<std::shared_ptr<Boid>> &boids,
 
     for(const auto& obst : obstacles)
     {
-        float dist = obst->Distance(position_);
-        if(0.001f <= dist && dist <= obst->GetRange())
-            velocity_ += 20.0f * -obst->DistanceVector(position_) / dist;
+        if(obst->enabled)
+        {
+            float dist = obst->Distance(position_);
+            if(0.001f <= dist && dist <= obst->GetRange())
+            {
+                glm::vec2 dist_vec = obst->DistanceVector(position_) / dist;
+                float proportional_dist = dist / obst->GetRange();
+                velocity_ += obst_avoid_weight * -dist_vec / proportional_dist;
+            }
+        }
     }
 
     float speed = glm::length(velocity_);
