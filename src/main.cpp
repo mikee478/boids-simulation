@@ -80,7 +80,12 @@ int main(void)
     glEnable(GL_BLEND);  
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
 
-    Flock flock;
+    const glm::vec2 MIN_BOUND(0.0f, 0.0f);
+    const glm::vec2 MAX_BOUND(static_cast<float>(WINDOW_WIDTH),static_cast<float>(WINDOW_HEIGHT));
+
+    Shader::projection_mat = glm::ortho(MIN_BOUND.x, MAX_BOUND.x, MIN_BOUND.y, MAX_BOUND.y);
+
+    Flock flock(MIN_BOUND, MAX_BOUND);
     float cohesion_weight = flock.GetCohesionWeight();
     float separation_weight = flock.GetSeparationWeight();
     float alignment_weight = flock.GetAlignmentWeight();

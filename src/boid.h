@@ -13,8 +13,8 @@ public:
     float GetHeading() const {return glm::atan(velocity_.y, velocity_.x);}
     void Update(float dt, const std::vector<std::shared_ptr<Boid>> &boids,
         float cohesion_weight, float separation_weight, float alignment_weight,
-        float obst_avoid_weight,
-        const std::vector<std::shared_ptr<Obstacle>> &obstacles);   
+        float obst_avoid_weight, const std::vector<std::shared_ptr<Obstacle>> &obstacles,
+        const glm::vec2 &MIN_BOUND, const glm::vec2 &MAX_BOUND);
     glm::vec2 Cohesion(const std::vector<std::shared_ptr<Boid>> &neighbors) const;
     glm::vec2 Separation(const std::vector<std::shared_ptr<Boid>> &neighbors) const;
     glm::vec2 Alignment(const std::vector<std::shared_ptr<Boid>> &neighbors) const;

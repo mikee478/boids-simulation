@@ -15,10 +15,7 @@ public:
         va_.AddBuffer(vb_, layout);
 
         shader_.SetUniform1f("u_range", range);
-
-        shader_.SetUniformMatrix4f(
-            "u_proj_mat", 
-            glm::ortho(0.0f, static_cast<float>(900), 0.0f, static_cast<float>(600)));
+        shader_.SetUniformMatrix4f("u_proj_mat", Shader::projection_mat);
         shader_.SetUniform4f("u_color", color);
     }
     void Render(const glm::vec2 &a, const glm::vec2 &b)

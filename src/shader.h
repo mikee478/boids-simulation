@@ -28,6 +28,8 @@ public:
     void SetUniformMatrix3f(const std::string& name, const glm::mat3 &matrix);
     void SetUniformMatrix4f(const std::string& name, const glm::mat4 &matrix);
 
+    static glm::mat4 projection_mat;
+
 private:
     std::string ReadFile(const std::string& path);
     unsigned int CompileShader(unsigned int type, const std::string& source);

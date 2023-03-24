@@ -11,8 +11,8 @@ Boid::Boid(glm::vec2 position) : position_(position)
 
 void Boid::Update(float dt, const std::vector<std::shared_ptr<Boid>> &boids, 
     float cohesion_weight, float separation_weight, float alignment_weight,
-    float obst_avoid_weight,
-    const std::vector<std::shared_ptr<Obstacle>> &obstacles)
+    float obst_avoid_weight, const std::vector<std::shared_ptr<Obstacle>> &obstacles,
+    const glm::vec2 &MIN_BOUND, const glm::vec2 &MAX_BOUND)
 {
     std::vector<std::shared_ptr<Boid>> neighbors;
     for(auto &b : boids)
@@ -48,11 +48,12 @@ void Boid::Update(float dt, const std::vector<std::shared_ptr<Boid>> &boids,
 
     position_ += velocity_ * dt;
 
-    const float r = 2.0f;
-    if(position_.x < 0-r) position_.x += 900+2*r;
-    if(position_.x > 900+r) position_.x -= 900+2*r;
-    if(position_.y < 0-r) position_.y += 600+2*r;
-    if(position_.y > 600+r) position_.y -= 600+2*r;
+    glm::vec2 shape = MAX_BOUND - MIN_BOUND;
+    const float r = 3.0f;
+    if(position_.x < MIN_BOUND.x-r) position_.x += shape.x+2*r;
+    if(position_.x > MAX_BOUND.x+r) position_.x -= shape.x+2*r;
+    if(position_.y < MIN_BOUND.y-r) position_.y += shape.y+2*r;
+    if(position_.y > MAX_BOUND.y+r) position_.y -= shape.y+2*r;
 }
 
 glm::vec2 Boid::Cohesion(const std::vector<std::shared_ptr<Boid>> &neighbors) const

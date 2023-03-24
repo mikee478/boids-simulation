@@ -5,6 +5,8 @@
 #include <sstream>
 #include <GL/glew.h>
 
+glm::mat4 Shader::projection_mat{};
+
 Shader::Shader(const std::string &vs_path, const std::string &fs_path)
     : vs_path_(vs_path), fs_path_(fs_path)
 {

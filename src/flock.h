@@ -12,7 +12,7 @@ class FlockRenderer;
 class Flock
 {
 public:
-    Flock(glm::vec3 color = glm::vec3(0.0f,1.0f,0.0f));
+    Flock(const glm::vec2 &min_bound, const glm::vec2 &max_bound, glm::vec3 color = glm::vec3(0.0f,1.0f,0.0f));
     void AddBoid(const glm::vec2 &position);
     void Update(const std::vector<std::shared_ptr<Obstacle>> &obstacles, float dt);
     const std::vector<std::shared_ptr<Boid>> GetBoids() const {return boids_;};
@@ -35,6 +35,8 @@ private:
     float separation_weight_;
     float alignment_weight_;
     float obst_avoid_weight_;
+    const glm::vec2 MIN_BOUND_;
+    const glm::vec2 MAX_BOUND_;
     std::unique_ptr<FlockRenderer> flock_renderer_;
 };
 
