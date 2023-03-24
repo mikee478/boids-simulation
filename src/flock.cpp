@@ -1,5 +1,6 @@
 #include "flock.h"
 #include <glm/gtx/transform.hpp>
+#include <glm/gtx/norm.hpp>
 
 Flock::Flock(const glm::vec2 &min_bound, const glm::vec2 &max_bound, glm::vec3 color)
     : cohesion_weight_(2.0f), separation_weight_(3.0f), alignment_weight_(2.0f),
@@ -13,6 +14,13 @@ void Flock::AddBoid(const glm::vec2 &position)
 {
     if(boids_.size() < Flock::MAX_BOIDS)
         boids_.emplace_back(std::make_shared<Boid>(position));
+}
+
+void Flock::DeleteBoids(const glm::vec2 &position, float radius)
+{
+    boids_.erase(std::remove_if(boids_.begin(), boids_.end(),
+        [&position, &radius](std::shared_ptr<Boid> b) { return glm::distance2(b->GetPosition(), position) <= radius*radius;}),
+        boids_.end());
 }
 
 void Flock::Update(const std::vector<std::shared_ptr<Obstacle>> &obstacles, float dt)

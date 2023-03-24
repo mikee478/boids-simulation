@@ -14,6 +14,7 @@ class Flock
 public:
     Flock(const glm::vec2 &min_bound, const glm::vec2 &max_bound, glm::vec3 color = glm::vec3(0.0f,1.0f,0.0f));
     void AddBoid(const glm::vec2 &position);
+    void DeleteBoids(const glm::vec2 &position, float radius);
     void Update(const std::vector<std::shared_ptr<Obstacle>> &obstacles, float dt);
     const std::vector<std::shared_ptr<Boid>> GetBoids() const {return boids_;};
     size_t GetSize() const {return boids_.size();}
@@ -24,7 +25,7 @@ public:
     void SetCohesionWeight(float w) {cohesion_weight_ = w;}
     void SetSeparationWeight(float w) {separation_weight_ = w;}
     void SetAlignmentWeight(float w) {alignment_weight_ = w;}
-    float SetObstacleAvoidanceWeight(float w) {obst_avoid_weight_ = w;}
+    void SetObstacleAvoidanceWeight(float w) {obst_avoid_weight_ = w;}
     void Render();
 
     static const size_t MAX_BOIDS = 500;

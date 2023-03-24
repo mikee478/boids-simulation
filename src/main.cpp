@@ -103,8 +103,9 @@ int main(void)
     obstacles.push_back(mid_wall_obst);
 
     float prev_time = 0, cur_time, dt;
-    bool paused = false;
+    bool pause = false;
     double mouse_x, mouse_y;
+    int mouse_action = 0;
 
     ImGui::CreateContext();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -124,12 +125,22 @@ int main(void)
         ImGui::SliderFloat("Separation", &separation_weight, 0.0f, 20.0f);
         ImGui::SliderFloat("Alignment", &alignment_weight, 0.0f, 20.0f);
         ImGui::SliderFloat("Obstacle Avoidance", &obst_avoid_weight, 0.0f, 20.0f);
-        ImGui::Checkbox("Mouse Obstacle", &mouse_obstacle->enabled);
-        ImGui::Checkbox("Paused", &paused);
+
         ImGui::Separator();
+
+        ImGui::Text("Mouse Action");
+        ImGui::RadioButton("Add Boids", &mouse_action, 0);
+        ImGui::SameLine();
+        ImGui::RadioButton("Delete Boids", &mouse_action, 1);
+        ImGui::SameLine();
+        ImGui::RadioButton("Obstacle", &mouse_action, 2);
+
+        ImGui::Checkbox("Pause", &pause);
+
+        ImGui::Separator();
+
         ImGui::Text("%lu/%lu Boids", flock.GetSize(), Flock::MAX_BOIDS);
         ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
-        
         ImGui::End();
 
         flock.SetCohesionWeight(cohesion_weight);
@@ -141,14 +152,20 @@ int main(void)
         dt = cur_time - prev_time;
         prev_time = cur_time;
 
-        if(!paused)
+        if(!pause)
         {
             glfwGetCursorPos(window, &mouse_x, &mouse_y);
 
             if(Input::MouseButtonLeftPressed())
-                flock.AddBoid({mouse_x, -mouse_y + WINDOW_HEIGHT});
+            {
+                if(mouse_action == 0)
+                    flock.AddBoid({mouse_x, -mouse_y + WINDOW_HEIGHT});
+                else if(mouse_action == 1)
+                    flock.DeleteBoids({mouse_x, -mouse_y + WINDOW_HEIGHT}, 25.0f);
+            }
 
             mouse_obstacle->SetCenter(mouse_x, -mouse_y + WINDOW_HEIGHT);
+            mouse_obstacle->enabled = (mouse_action == 2);
 
             flock.Update(obstacles, dt);
         }
