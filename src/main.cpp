@@ -122,7 +122,7 @@ int main(void)
         ImGui::Checkbox("Mouse Obstacle", &mouse_obstacle->enabled);
         ImGui::Checkbox("Paused", &paused);
         ImGui::Separator();
-        ImGui::Text("%lu Boids", flock.GetSize());
+        ImGui::Text("%lu/%lu Boids", flock.GetSize(), Flock::MAX_BOIDS);
         ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
         
         ImGui::End();

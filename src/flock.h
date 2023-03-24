@@ -27,7 +27,7 @@ public:
     float SetObstacleAvoidanceWeight(float w) {obst_avoid_weight_ = w;}
     void Render();
 
-    static const size_t MAX_BOIDS = 600;
+    static const size_t MAX_BOIDS = 500;
 
 private:
     std::vector<std::shared_ptr<Boid>> boids_;
