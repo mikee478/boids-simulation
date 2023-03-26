@@ -11,4 +11,4 @@ These rules are implemented by calculating the forces that act on each boid base
 
 The Boids simulation has found applications in a variety of fields, including robotics, computer graphics, and artificial intelligence. It has been used to design autonomous robots that can navigate and communicate with each other, to create realistic simulations of crowds and traffic, and to study the behavior of social animals such as ants and bees.
 
-<img width="800" alt="image" src="https://user-images.githubusercontent.com/28791222/227610970-ec0669f8-3220-46e6-ad4c-35195fcb243e.png">
+https://user-images.githubusercontent.com/28791222/227751008-d496b452-66e5-4329-8852-bd550da52f42.mp4
